@@ -16,12 +16,22 @@ function App() {
     if(input!='') {setPosts(posts.concat({ name: input, key: keygenerate() }));
     document.querySelector(".Alert").style.display = "none";}
     else{document.querySelector(".Alert").style.display="block"}
+    document.getElementById("inp").value = '';
   };
 
   useEffect(() => {
     console.log(posts);
   });
 
+  const edit = (e) => {
+    var elnew = document.getElementById(`inp${e.target.parentElement.parentElement.id}`).value;
+    setPosts(
+    posts.map(el => 
+        el.key==e.target.parentElement.parentElement.id
+        ? {...el, name : elnew} 
+        : el 
+  ))
+  }
 
   const RenderList = (props) => {
     const remove = (e) => {
@@ -33,6 +43,7 @@ function App() {
     };
 
     return props.list.map((el) => {
+      var inpid = 'inp' + el.key;
       return (
         <div
           id={el.key}
@@ -44,11 +55,24 @@ function App() {
           }}
         >
           <h1>{el.name}</h1>
+
+          <div id={inpid + 'x'} style={{display:"none",alignSelf:"center"}}>
+          <input id= {inpid}></input>
+          <button onClick={edit}>edit</button>
+          </div>
+          
           <button
             style={{ height: "30px", alignSelf: "center" }}
             onClick={remove}
           >
             remove
+          </button>
+
+          <button
+            style={{ height: "30px", alignSelf: "center" }}
+            onClick={ () => {document.getElementById(inpid + 'x').style.display="block"}}
+          >
+            edit
           </button>
         </div>
       );
